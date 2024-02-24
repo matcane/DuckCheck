@@ -1,0 +1,19 @@
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import MainScreen data.screens.menu_screen.MainScreen
+#:import LoginScreen data.screens.login_screen.LoginScreen
+#:import GameScreen data.screens.game_screen.GameScreen
+
+ScreenManager:
+    transition: FadeTransition()
+
+    LoginScreen:
+        id: login
+        name: "login"
+
+    MainScreen:
+        id: menu
+        name: "main"
+
+    GameScreen:
+        id: game
+        name: "game"

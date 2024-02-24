@@ -1,0 +1,507 @@
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import gch kivy.utils.get_color_from_hex
+
+<Panel@MDBoxLayout>
+    md_bg_color: app.theme_cls.opposite_bg_dark if app.theme_cls.theme_style == "Dark" else app.theme_cls.bg_dark
+    size_hint: .8, .8
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+<MainScreen>
+    dashboard: dashboard
+    logout: logout
+    nav_bar: nav_bar
+    games_count: games_count
+    games_moves_max: games_moves_max
+    games_moves_min: games_moves_min
+    games_win_white: games_win_white
+    games_win: games_win
+    games_win_black: games_win_black
+    games_list: games_list
+    settings_screen: settings_screen
+    drop_item_color: drop_item_color
+    drop_item_hue: drop_item_hue
+    drop_item_dark_square: drop_item_dark_square
+    change_color: change_color
+    change_hue: change_hue
+    settings_nav: settings_nav
+    highlight: highlight
+    sounds: sounds
+
+
+    md_bg_color: app.theme_cls.bg_darkest
+    MDBoxLayout:
+
+        MDNavigationRail:
+            current_selected_item: 0
+            id: nav_bar
+            type: "labeled"
+            width: dp(100)
+            md_bg_color: [1, 1, 1, 1]
+
+            MDNavigationRailItem:
+                icon: "home"
+                on_release:
+                    scr_manager.current = "Dashboard"
+
+            MDNavigationRailItem:
+                text: "Graj"
+                icon: "play"
+                on_release:
+                    scr_manager.current = "Play"
+
+
+            MDNavigationRailItem:
+                text: "Partie"
+                icon: "view-list"
+                on_release:
+                    scr_manager.current = "Stats"
+
+
+
+            MDNavigationRailItem:
+                text: "Ustawienia"
+                icon: "wrench"
+                on_release:
+                    scr_manager.current = "Settings"
+
+
+            MDNavigationRailItem:
+                id: logout
+                text: "Credits"
+                icon: "information"
+                on_release:
+                    scr_manager.current = "Credits"
+
+
+
+
+
+
+
+
+        ScreenManager:
+            id: scr_manager
+
+            MDScreen:
+                name: "Play"
+
+                MDBottomNavigation:
+                    selected_color_background: app.theme_cls.primary_color
+                    icon_active_color: app.theme_cls.primary_color
+                    icon_color_item_active: app.theme_cls.primary_color
+                    text_color_normal: [0, 0, 0, 1]
+                    MDBottomNavigationItem:
+                        name: "Against Player"
+                        text: "Przeciwko Graczowi"
+
+
+
+                        FloatLayout:
+                            FitImage:
+                                source: 'data/img/wood.png'
+                            MDFlatButton:
+                                adaptive_width: True
+                                md_bg_color: app.theme_cls.primary_color
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                                size_hint_x: .4
+                                text: "Graj"
+                                bold: True
+                                font_size: 36
+                                on_release:
+                                    root.initialize_board()
+                                    root.initialize_player()
+                                    root.parent.current = "game"
+
+
+                    MDBottomNavigationItem:
+                        name: "Against Bot"
+                        text: "Przeciwko Botowi"
+
+                        FloatLayout:
+                            FitImage:
+                                source: 'data/img/wood.png'
+                            MDFlatButton:
+                                adaptive_width: True
+                                md_bg_color: app.theme_cls.primary_color
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                                text: "Losowy kolor"
+                                bold: True
+                                font_size: 36
+                                on_release:
+                                    root.initialize_board()
+                                    root.initialize_bot_random()
+                                    root.parent.current = "game"
+                            MDFlatButton:
+                                adaptive_width: True
+                                md_bg_color: app.theme_cls.primary_color
+                                pos_hint: {'center_x': 0.25, 'center_y': 0.2}
+                                text: "Graj białym kolorem"
+                                bold: True
+                                font_size: 32
+                                on_release:
+                                    root.initialize_board()
+                                    root.initialize_bot_black()
+                                    root.parent.current = "game"
+                            MDFlatButton:
+                                adaptive_width: True
+                                md_bg_color: app.theme_cls.primary_color
+                                pos_hint: {'center_x': 0.75, 'center_y': 0.2}
+                                text: "Graj czarnym kolorem"
+                                bold: True
+                                font_size: 32
+                                on_release:
+                                    root.initialize_board()
+                                    root.initialize_bot_white()
+                                    root.parent.current = "game"
+            MDScreen:
+                name: "Dashboard"
+                FitImage:
+                    source: 'data/img/wood.png'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding: "20dp"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        size_hint: 1, None
+                        height: "200dp"
+                        MDBoxLayout:
+                            size_hint: None, 1
+                            width: "200dp"
+                        MDBoxLayout:
+
+                            size_hint: 1, .5
+                            pos_hint: {'top': 1}
+
+                            MDLabel:
+                                id: dashboard
+
+                                text: ""
+                                font_style: "H1"
+                                font_size: 36
+                                color: [0, 0, 0, 1]
+                                bold: True
+                        MDBoxLayout:
+
+                            size_hint: None, .5
+                            width: "450dp"
+                            pos_hint: {"right": 0, 'top': 1}
+                            MDFillRoundFlatIconButton:
+
+                                icon: "pencil"
+                                pos_hint: {'center_y': .2, 'x': .1}
+                                text: "Resetuj statystyki"
+                                halign: "center"
+                                font_style: "H1"
+                                font_size: 48
+                                bold: True
+                                on_release:
+                                    root.show_alert_dialog()
+                    MDBoxLayout:
+
+                        size_hint: 1, .5
+                        spacing: "30dp"
+                        padding: "20dp"
+
+
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_count
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Rozegrane partie"
+                                    font_size: "18dp"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    bold: True
+
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_moves_max
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Najdłuższa partia"
+                                    font_size: "18dp"
+                                    color: [0, 0, 0, 1]
+                                    halign: "center"
+                                    bold: True
+
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_moves_min
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Najkrótsza pratia"
+                                    font_size: "18dp"
+                                    color: [0, 0, 0, 1]
+                                    halign: "center"
+                                    bold: True
+
+                    MDBoxLayout:
+                        size_hint: 1, .5
+                        spacing: "30dp"
+                        padding: "20dp"
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_win_white
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Wygrane kolorem białym"
+                                    font_size: "18dp"
+                                    color: [0, 0, 0, 1]
+                                    halign: "center"
+                                    bold: True
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_win
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Wygrane"
+                                    font_size: "18dp"
+                                    color: [0, 0, 0, 1]
+                                    halign: "center"
+                                    bold: True
+                        MDBoxLayout:
+                            size_hint: .3, 1
+                            pos_hint: {"top": 1}
+                            md_bg_color: app.theme_cls.bg_light
+                            radius: [40, 40, 40, 40]
+                            orientation: "vertical"
+                            MDBoxLayout:
+                                size_hint: 1, .6
+                                MDLabel:
+                                    id: games_win_black
+                                    text: "--"
+                                    halign: "center"
+                                    color: [0, 0, 0, 1]
+                                    font_size: "48dp"
+                                    bold: True
+                            MDBoxLayout:
+                                size_hint: 1, .4
+                                MDLabel:
+                                    text: "Wygrane kolorem czarnym"
+                                    font_size: "18dp"
+                                    color: [0, 0, 0, 1]
+                                    halign: "center"
+                                    bold: True
+
+
+            MDScreen:
+                name: "Stats"
+                id: games_list
+                FitImage:
+                    source: 'data/img/wood.png'
+
+            MDScreen:
+                name: "Credits"
+                FitImage:
+                    source: 'data/img/wood.png'
+                Panel:
+                    MDScrollView:
+                        adaptive_height: True
+                        MDBoxLayout:
+                            adaptive_height: True
+                            orientation: "vertical"
+                            TwoLineListItem:
+                                text: "Grafiki figur orginalnie stworzone przez użytkownika Cburnett"
+                                theme_text_color: 'Custom'
+                                text_color: app.theme_cls.primary_color
+                                secondary_text: "https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces"
+                                secondary_theme_text_color: "Custom"
+                                secondary_text_color: app.theme_cls.primary_color
+                            TwoLineListItem:
+                                text: "Grafika kaczki"
+                                theme_text_color: 'Custom'
+                                text_color: app.theme_cls.primary_color
+                                secondary_text: "https://pngtree.com/freepng/yellow-rubber-duck_6270131.html"
+                                secondary_theme_text_color: "Custom"
+                                secondary_text_color: app.theme_cls.primary_color
+                            ThreeLineListItem:
+                                text: "Tutorial implementacji reprezentacji szachownicy"
+                                theme_text_color: 'Custom'
+                                text_color: app.theme_cls.primary_color
+                                secondary_text: "Autor tutoriala 'Chess Engine in Python' - Eddie Sharick"
+                                secondary_theme_text_color: "Custom"
+                                secondary_text_color: app.theme_cls.primary_color
+                                tertiary_text: "https://youtube.com/playlist?list=PLBwF487qi8MGU81nDGaeNE1EnNEPYWKY_&si=zOg7Nf7TjUvzi8XW"
+                                tertiary_theme_text_color: "Custom"
+                                tertiary_text_color: app.theme_cls.primary_color
+
+
+            MDScreen:
+                name: "Settings"
+                id: settings_screen
+                MDBottomNavigation:
+                    id: settings_nav
+                    text_color_active: app.theme_cls.primary_color
+                    text_color_normal: [0, 0, 0, 1]
+                    MDBottomNavigationItem:
+                        name: "Theming"
+                        text: "Style"
+                        icon: "select-color"
+                        MDFloatLayout:
+                            FitImage:
+                                source: 'data/img/wood.png'
+                            MDFillRoundFlatIconButton:
+                                size_hint: .2, .1
+                                pos_hint: {"center_x": .5}
+                                text: "Zapisz zmiany"
+                                halign: "center"
+                                on_release: root.apply_changes()
+                        Panel:
+                            MDScrollView:
+                                adaptive_height: True
+                                MDBoxLayout:
+                                    adaptive_height: True
+                                    orientation: "vertical"
+                                    TwoLineAvatarIconListItem:
+                                        id: change_color
+                                        text: "Podstawowa paleta colorów"
+                                        theme_text_color: 'Custom'
+                                        text_color: [0, 0, 0, 1]
+                                        secondary_text: "Blue"
+                                        secondary_theme_text_color: "Custom"
+                                        secondary_text_color: app.theme_cls.primary_color
+                                        IconRightWidget:
+                                            id: drop_item_color
+                                            md_bg_color: app.theme_cls.primary_color
+                                            icon: "blank"
+                                            on_release:
+                                                root.prep_color()
+                                                root.menu_color.open()
+                                    TwoLineAvatarIconListItem:
+                                        id: change_hue
+                                        text: "Odcień koloru"
+                                        theme_text_color: 'Custom'
+                                        text_color: [0, 0, 0, 1]
+                                        secondary_text: "A700"
+                                        secondary_theme_text_color: "Custom"
+                                        secondary_text_color: app.theme_cls.primary_color
+                                        IconRightWidget:
+                                            id: drop_item_hue
+                                            md_bg_color: app.theme_cls.primary_color
+                                            icon: "blank"
+                                            on_release:
+                                                root.prep_hue()
+                                                root.menu_hue.open()
+
+                    MDBottomNavigationItem:
+                        name: "Squares"
+                        text: "Szachownica"
+                        icon: "chess-king"
+                        FitImage:
+                            source: 'data/img/wood.png'
+                        Panel:
+                            MDScrollView:
+                                adaptive_height: True
+                                MDBoxLayout:
+                                    adaptive_height: True
+                                    orientation: "vertical"
+                                    TwoLineAvatarIconListItem:
+                                        text: "Ciemne pole"
+                                        bold: True
+                                        theme_text_color: 'Custom'
+                                        text_color: [0, 0, 0, 1]
+                                        IconRightWidget:
+                                            id: drop_item_dark_square
+                                            md_bg_color: gch("779455")
+                                            icon: "blank"
+                                            on_release:
+                                                root.prep_dark_square()
+                                                root.menu_dark_square.open()
+
+
+                    MDBottomNavigationItem:
+                        name: "Game"
+                        text: "Partia"
+                        FitImage:
+                            source: 'data/img/wood.png'
+                        Panel:
+                            MDScrollView:
+                                adaptive_height: True
+                                MDBoxLayout:
+                                    adaptive_height: True
+                                    orientation: "vertical"
+                                    OneLineAvatarIconListItem:
+                                        text: "Podświetlenie ruchów"
+                                        theme_text_color: 'Custom'
+                                        text_color: [0, 0, 0, 1]
+                                        RightCheckbox:
+                                            id: highlight
+                                            active: True
+                                            on_active: root.toggle_highlights()
+                                    OneLineAvatarIconListItem:
+                                        text: "Dźwięki"
+                                        theme_text_color: 'Custom'
+                                        text_color: [0, 0, 0, 1]
+                                        theme_font_styles: "Custom"
+                                        RightCheckbox:
+                                            id: sounds
+                                            active: True
+                                            on_active: root.toggle_sounds()

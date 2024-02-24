@@ -1,0 +1,171 @@
+#:import Board data.engine.board.Board
+<Item>
+    ImageLeftWidget:
+        source: root.source
+
+<GameScreen>
+    board: board
+    notation: notation
+    marking: marking
+    scroll_notation: scroll_notation
+    box_scroll_notation: box_scroll_notation
+    turn: turn
+    play_as: play_as
+    MDFloatLayout:
+        FitImage:
+            source: 'data/img/wood.png'
+
+    MDBoxLayout:
+
+
+        MDFloatLayout:
+            size_hint: .6, 1
+
+            MDFloatLayout:
+                size_hint: (.9, .9)
+                pos_hint: {'x': 0.05, 'y': 0.05}
+
+
+            MDFloatLayout:
+                id: marking
+                size_hint: (.8, .8)
+                pos_hint: {'x': .1, 'y': .1}
+
+            MDFloatLayout:
+                Board:
+                    id: board
+                    size_hint: (.8, .8)
+                    pos_hint: {'x': .1, 'y': .1}
+
+
+        MDFloatLayout:
+            size_hint: .4, .9
+
+            MDBoxLayout:
+                pos_hint: {'x': 0, 'y': 0.05}
+                size_hint: .9, 1
+
+                MDBottomNavigation:
+                    text_color_active: "black"
+
+
+
+                    MDBottomNavigationItem:
+                        name: "game"
+                        text: "Partia"
+                        icon: "view-list"
+                        on_tab_press: root.deselect_piece()
+
+
+                        MDBoxLayout:
+                            id: box_scroll_notation
+                            size_hint: (.9, .6)
+                            pos_hint: {'x': .05, 'y': .35}
+                            orientation: "vertical"
+
+                            MDScrollView:
+                                id: scroll_notation
+                                adaptive_height: True
+                                MDBoxLayout:
+                                    id: notation
+                                    adaptive_height: True
+                                    orientation: "vertical"
+
+                        MDBoxLayout:
+                            size_hint: (.9, .1)
+                            pos_hint: {'x': 0.05, 'y': 0.25}
+
+                            MDIconButton:
+                                size_hint: .25, 1
+                                icon: 'arrow-collapse-left'
+                                on_release:
+                                    root.ids.board.game.prev_last()
+                                    root.ids.board.update_board()
+
+                            MDIconButton:
+                                size_hint: .25, 1
+
+                                icon: 'arrow-left'
+                                on_release:
+                                    root.ids.board.game.prev_move()
+                                    root.ids.board.update_board()
+
+                            MDIconButton:
+                                size_hint: .25, 1
+                                icon: 'arrow-right'
+                                on_release:
+                                    root.ids.board.game.next_move()
+                                    root.ids.board.update_board()
+
+                            MDIconButton:
+                                size_hint: .25, 1
+                                icon: 'arrow-collapse-right'
+                                on_release:
+                                    root.ids.board.game.next_last()
+                                    root.ids.board.update_board()
+
+                        MDBoxLayout:
+                            size_hint: (.9, .15)
+                            pos_hint: {'x': 0.05, 'y': 0.05}
+
+                            MDLabel:
+                                id: turn
+                                size_hint: .5, 1
+                                text: "Ruch Białego"
+                                font_size: dp(14)
+
+                            MDLabel:
+                                id: play_as
+                                size_hint: .5, 1
+                                text: ""
+                                font_size: dp(14)
+
+                            MDIconButton:
+                                size_hint: .5, 1
+                                type: 'large'
+                                md_bg_color: app.theme_cls.primary_color
+                                icon: 'home'
+                                on_release:
+                                    root.show_alert_dialog()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#on_release:
+#    root.board.unbind_keys()
+#    root.parent.ids.menu.update_stats()
+#    root.parent.current = 'main'

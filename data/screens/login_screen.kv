@@ -1,0 +1,15 @@
+<LoginScreen>
+    md_bg_color: app.theme_cls.bg_light
+    FloatLayout:
+        size_hint: (0.9, 0.9)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        FloatLayout:
+            size_hint: (.9, 0.9)
+            pos_hint: {'x': .05, 'y': .05}
+            MDFlatButton:
+                size_hint: (1, 1)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                text: "Start"
+                font_size: dp(96)
+                on_release:
+                    root.login()
